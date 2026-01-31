@@ -1,0 +1,9 @@
+.venv/
+node_modules/
+.next/
+.env
+dataset/
+*.csv
+__pycache__/
+*.pkl
+*.parquet
