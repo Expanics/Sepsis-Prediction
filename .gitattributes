@@ -1,0 +1,5 @@
+# Git LFS tracking for large model files
+new_model/*.dat filter=lfs diff=lfs merge=lfs -text
+new_model/*.pkl filter=lfs diff=lfs merge=lfs -text
+new_model/*.npy filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text

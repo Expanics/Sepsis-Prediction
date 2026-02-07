@@ -139,7 +139,7 @@ class PredictionInput(BaseModel):
     ntprobnp_max: Optional[float] = None
 
 class PredictionOutput(BaseModel):
-    sepsis: int
+    sepsis: float
     respiration: float
     coagulation: float
     liver: float

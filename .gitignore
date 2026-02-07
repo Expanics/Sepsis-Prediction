@@ -1,9 +1,49 @@
-.venv/
-node_modules/
-.next/
-.env
+# Sensitive data - MIMIC-IV dataset requires credentials
 dataset/
-*.csv
-__pycache__/
-*.pkl
 *.parquet
+*.csv
+
+# Database files
+backend/patients.db
+backend/*.db
+
+# Model files (large files - use LFS)
+new_model/*.dat
+new_model/*.npy
+model/
+
+# Python
+.venv/
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pkl
+
+# Node.js
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+
+# Environment files
+.env
+.env.local
+.env.production
+backend/.env
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+notebook/.ipynb_checkpoints/

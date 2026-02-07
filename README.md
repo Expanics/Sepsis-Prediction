@@ -1,146 +1,377 @@
-# SepsisGuard - AI-Powered Sepsis Prediction System
+# 🏥 Sepsis Prediction System
 
-A comprehensive sepsis prediction system using GRU-D neural network for multi-output early warning predictions. Features a premium medical dashboard with real-time risk visualization.
+<div align="center">
 
-![SepsisGuard Dashboard](https://img.shields.io/badge/Status-Active-brightgreen) ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green) ![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green?style=for-the-badge&logo=fastapi)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-## Features
+**An AI-powered early warning system for sepsis prediction using MIMIC-IV ICU data**
 
-- **Multi-Output Predictions**: Sepsis probability, SOFA component scores (cardiovascular, respiration, coagulation, liver, CNS, renal), time-to-sepsis, and mortality risk
-- **70+ Input Features**: Comprehensive patient data form with demographics, vitals, lab results, blood gas, electrolytes, liver function, GCS, and cardiac markers
-- **Interactive 3D Visualization**: Real-time organ-level risk display with color-coded severity
-- **Dynamic Warnings**: Automatic alerts for critical conditions based on prediction thresholds
-- **Premium UI/UX**: Glassmorphism design, smooth animations, responsive layout
+[Features](#-features) • [Installation](#-installation) • [Dataset](#-obtaining-mimic-iv-dataset) • [API Docs](#-api-endpoints) • [Deployment](#-deployment)
 
-## Quick Start
+</div>
+
+---
+
+## 📋 Overview
+
+This application leverages machine learning to predict sepsis risk in ICU patients using the **MIMIC-IV** clinical database. The system provides:
+
+- **Real-time sepsis risk prediction** with probability scores
+- **Multi-organ dysfunction scoring** (SOFA-based: Respiratory, Cardiovascular, Renal, CNS)
+- **Patient monitoring dashboard** with emergency patient tracking
+- **Beautiful, modern UI** with dark theme and responsive design
+
+> ⚠️ **Important**: This project uses the MIMIC-IV dataset which requires credentialed access. See [Obtaining MIMIC-IV Dataset](#-obtaining-mimic-iv-dataset) for instructions.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔮 **AI Prediction** | XGBoost-based model for sepsis probability prediction |
+| 📊 **Multi-output** | Predicts multiple SOFA component scores (6h, 12h, 24h windows) |
+| 🏥 **Patient Dashboard** | View hospital-wide statistics and emergency patients |
+| 📝 **Data Entry** | Add new patient measurements with auto-forward-fill |
+| 📈 **Visualizations** | Risk gauges, charts, and patient body visualization |
+| 🔄 **Real-time Updates** | Auto-refresh patient data and predictions |
+
+---
+
+## 📁 Project Structure
+
+```
+Sepsis-Prediction/
+├── backend/                    # FastAPI Backend Server
+│   ├── api.py                  # API endpoint definitions
+│   ├── main.py                 # FastAPI app entry point
+│   ├── database.py             # SQLAlchemy database models
+│   ├── model_wrapper.py        # ML model loading & prediction logic
+│   ├── schemas.py              # Pydantic request/response schemas
+│   ├── requirements.txt        # Python dependencies
+│   └── venv/                   # Python virtual environment (create yourself)
+│
+├── frontend/                   # Next.js Frontend Application
+│   ├── src/
+│   │   ├── app/                # Next.js App Router
+│   │   │   ├── page.tsx        # Main page component
+│   │   │   ├── layout.tsx      # Root layout
+│   │   │   └── globals.css     # Global styles
+│   │   ├── components/
+│   │   │   ├── dashboard/      # Dashboard components
+│   │   │   │   ├── HospitalOverview.tsx
+│   │   │   │   ├── PatientDashboard.tsx
+│   │   │   │   ├── PredictionResults.tsx
+│   │   │   │   └── DistributionChart.tsx
+│   │   │   ├── form/           # Form components
+│   │   │   │   └── SepsisForm.tsx
+│   │   │   ├── ui/             # Reusable UI components
+│   │   │   │   ├── RiskGauge.tsx
+│   │   │   │   ├── MinMaxInput.tsx
+│   │   │   │   └── ...
+│   │   │   └── layout/
+│   │   │       └── BodyVisualizer.tsx
+│   │   └── lib/                # Utilities
+│   ├── package.json
+│   └── .env.local              # Environment variables (create yourself)
+│
+├── new_model/                  # Trained ML Model Artifacts
+│   ├── model_joblib.pkl        # Main XGBoost model
+│   ├── scaler_X.pkl            # Feature scaler
+│   ├── scaler_y_reg.pkl        # Target scaler
+│   └── global_feat_mean30.npy  # Feature means for imputation
+│
+├── sql/                        # Database Queries
+│   └── select_query.sql        # MIMIC-IV data extraction query
+│
+├── dataset/                    # Dataset files (NOT included - see instructions)
+│
+├── notebook/                   # Jupyter notebooks for training
+│
+├── .gitignore                  # Git ignore rules
+├── .gitattributes              # Git LFS configuration
+└── README.md                   # This file
+```
+
+---
+
+## 🚀 Installation
 
 ### Prerequisites
 
-- Node.js 18+ (for frontend)
-- Python 3.10+ (for backend)
-- npm or yarn
+- **Python 3.10+**
+- **Node.js 18+**
+- **Git LFS** (for large model files)
 
-### Installation
+### 1. Clone Repository
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd ORCA_PURAPURANINJA
-   ```
+```bash
+git clone https://github.com/Expanics/Sepsis-Prediction.git
+cd Sepsis-Prediction
 
-2. **Setup Backend**
-   ```bash
-   cd backend
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. **Setup Frontend**
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-### Running the Application
-
-1. **Start Backend (Terminal 1)**
-   ```bash
-   cd backend
-   source venv/bin/activate
-   uvicorn main:app --reload --host 0.0.0.0 --port 8000
-   ```
-   Backend will be available at `http://localhost:8000`
-
-2. **Start Frontend (Terminal 2)**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Frontend will be available at `http://localhost:3000`
-
-3. **Open in Browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## Usage
-
-1. **Fill Patient Data**: Use the accordion form on the left to enter patient information across 8 categories
-2. **Submit Assessment**: Click "Run Assessment" to send data to the prediction API
-3. **View Results**: See the prediction results panel with risk gauge, SOFA scores, and warnings
-4. **Monitor 3D View**: Organs change color based on risk level (green→yellow→red)
-
-## Project Structure
-
-```
-ORCA_PURAPURANINJA/
-├── frontend/                 # Next.js 16 frontend
-│   ├── src/
-│   │   ├── app/              # Next.js app router
-│   │   ├── components/       # React components
-│   │   │   ├── dashboard/    # Dashboard components
-│   │   │   ├── form/         # Form components
-│   │   │   └── ui/           # UI primitives
-│   │   └── lib/              # Utilities & config
-│   └── package.json
-├── backend/                  # FastAPI backend
-│   ├── main.py               # FastAPI app
-│   ├── api.py                # API routes
-│   ├── schemas.py            # Pydantic schemas
-│   └── requirements.txt
-├── dataset/                  # Training data
-│   └── dataset.csv
-└── notebook/                 # Model training notebooks
+# Pull LFS files (model artifacts)
+git lfs pull
 ```
 
-## API Endpoints
+### 2. Backend Setup
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+.\venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Create environment file
+echo "NEXT_PUBLIC_API_URL=http://127.0.0.1:8000" > .env.local
+```
+
+---
+
+## 🗄️ Obtaining MIMIC-IV Dataset
+
+The MIMIC-IV database is a **restricted dataset** requiring credentialed access from PhysioNet.
+
+### Step 1: Get PhysioNet Access
+
+1. Go to [PhysioNet](https://physionet.org/)
+2. Create an account and complete the **CITI training course**
+3. Request access to [MIMIC-IV](https://physionet.org/content/mimiciv/3.1/)
+4. Wait for approval (usually 1-2 weeks)
+
+### Step 2: Access via Google BigQuery
+
+Once approved, you can access MIMIC-IV via Google BigQuery:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create or select a project
+3. Enable the BigQuery API
+4. Link your PhysioNet credentials to access `physionet-data.mimiciv_3_1_derived`
+
+### Step 3: Run the Data Extraction Query
+
+Execute the SQL query in `sql/select_query.sql` using BigQuery:
+
+```sql
+-- This query extracts hourly patient data with vital signs, 
+-- lab values, and sepsis labels from MIMIC-IV
+
+-- See sql/select_query.sql for the complete query
+```
+
+**Export the results** to CSV or Parquet format.
+
+### Step 4: Prepare the Database
+
+After obtaining the dataset, load it into the SQLite database:
+
+```python
+# In backend/ directory
+import pandas as pd
+from database import init_db, get_db, PatientData
+from sqlalchemy.orm import Session
+
+# Load your exported data
+df = pd.read_csv('your_mimic_data.csv')  # or parquet
+
+# Initialize database
+init_db()
+
+# Insert data (use your own script or modify database.py)
+```
+
+---
+
+## 🏃 Running the Application
+
+### Start Backend Server
+
+```bash
+cd backend
+source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+export OMP_NUM_THREADS=1  # Recommended for model performance
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Backend will be available at: `http://localhost:8000`
+
+### Start Frontend Server
+
+```bash
+cd frontend
+npm run dev
+```
+
+Frontend will be available at: `http://localhost:3000`
+
+---
+
+## 📡 API Endpoints
+
+Base URL: `http://localhost:8000`
+
+### Statistics & Overview
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/` | Health check |
-| POST | `/predict` | Submit patient data for prediction |
+| `GET` | `/` | Health check - API status |
+| `GET` | `/stats` | Get hospital statistics (total patients, sepsis cases, demographics) |
 
-### Prediction Request Example
+### Patient Management
 
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/patients` | List all patients (with optional `?search=` query) |
+| `GET` | `/patients/emergency` | Get patients with sepsis (limit=50) |
+| `GET` | `/patient/{stay_id}` | Get patient's complete history |
+| `POST` | `/patient` | Add new patient measurement record |
+
+### Predictions
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/predict/{stay_id}?window_hours=6` | Predict for existing patient (6/12/24h window) |
+| `POST` | `/predict?window_hours=6` | Predict from manual input data |
+
+### Example Requests
+
+**Get Patient List:**
+```bash
+curl http://localhost:8000/patients?search=12345
+```
+
+**Get Prediction for Patient:**
+```bash
+curl -X POST "http://localhost:8000/predict/30001234?window_hours=6"
+```
+
+**Manual Prediction:**
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "heart_rate_min": 70,
+    "heart_rate_max": 90,
+    "temperature_min": 36.5,
+    "temperature_max": 37.2,
+    ...
+  }'
+```
+
+### Response Format
+
+**Prediction Output:**
 ```json
 {
-  "age": 65,
-  "hr": 0,
-  "f0_": "M",
-  "heart_rate_min": 70,
-  "heart_rate_max": 100,
-  "sbp_min": 110,
-  "sbp_max": 140
+  "sepsis": 0.45,           // Sepsis probability (0-1)
+  "respiration": 1.2,       // Respiratory SOFA score
+  "cardiovascular": 0.8,    // Cardiovascular SOFA score
+  "renal": 0.3,             // Renal SOFA score
+  "cns": 0.5                // CNS SOFA score
 }
 ```
 
-### Prediction Response
+---
 
-```json
-{
-  "sepsis": 0.75,
-  "respiration": 2.5,
-  "coagulation": 1.0,
-  "liver": 0.5,
-  "cardiovascular": 3.0,
-  "cns": 1.0,
-  "renal": 2.0,
-  "hours_beforesepsis": 4.5,
-  "fod": 0.3,
-  "hours_beforedeath": 24.0
-}
+## 🛠️ Development
+
+### Running Tests
+
+```bash
+# Backend
+cd backend
+pytest
+
+# Frontend
+cd frontend
+npm test
 ```
 
-## Tech Stack
+### Environment Variables
 
-- **Frontend**: Next.js 16, React 19, Tailwind CSS v4, Framer Motion, React Three Fiber
-- **Backend**: FastAPI, Pydantic
-- **ML**: GRU-D Neural Network (PyTorch)
-- **Data**: MIMIC-IV ICU dataset
+**Backend** (`backend/.env`):
+```env
+DATABASE_URL=sqlite:///./patients.db
+MODEL_PATH=../new_model
+```
 
-## License
+**Frontend** (`frontend/.env.local`):
+```env
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
+```
 
-MIT License
+---
 
-## Contributing
+## 📦 Model Information
 
-Contributions welcome! Please open an issue or submit a pull request.
+The prediction model is built using:
+
+- **Algorithm**: XGBoost Multi-output Regressor
+- **Features**: 80+ clinical variables (vital signs, lab values, etc.)
+- **Outputs**: Sepsis probability + 4 SOFA component scores
+- **Training Data**: MIMIC-IV ICU dataset (~100k patients)
+
+### Feature Categories
+
+| Category | Features |
+|----------|----------|
+| **Vital Signs** | Heart rate, BP, Temperature, SpO2, Respiratory rate |
+| **Blood** | WBC, Platelets, Hemoglobin, Neutrophils, INR, PT |
+| **Respiratory** | PO2, PCO2, FiO2, P/F ratio, Ventilation status |
+| **Acid-Base** | pH, Lactate, Bicarbonate, Base excess |
+| **Electrolytes** | Na, K, Cl, Ca, Glucose |
+| **Chemistry** | Creatinine, BUN, Albumin, Bilirubin, Liver enzymes |
+| **Neurological** | GCS (motor, verbal, eyes) |
+| **Cardiac** | Troponin, CK-MB, NT-proBNP |
+| **Vasopressors** | Dopamine, Epinephrine, Norepinephrine doses |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⚠️ Disclaimer
+
+This application is for **research and educational purposes only**. It should NOT be used for clinical decision-making without proper validation and regulatory approval. Always consult qualified healthcare professionals for medical decisions.
+
+---
+
+## 🙏 Acknowledgments
+
+- [MIMIC-IV Database](https://mimic.mit.edu/) - PhysioNet
+- [Sepsis-3 Definitions](https://jamanetwork.com/journals/jama/fullarticle/2492881) - JAMA
+- Built with ❤️ using FastAPI, Next.js, and XGBoost
