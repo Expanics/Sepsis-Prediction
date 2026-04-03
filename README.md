@@ -25,7 +25,7 @@ This application leverages machine learning to predict sepsis risk in ICU patien
 - **Patient monitoring dashboard** with emergency patient tracking
 - **Beautiful, modern UI** with dark theme and responsive design
 
-> ⚠️ **Important**: This project uses the MIMIC-IV dataset which requires credentialed access. See [Obtaining MIMIC-IV Dataset](#-obtaining-mimic-iv-dataset) for instructions.
+> ⚠️ **Important**: This project uses the MIMIC-IV dataset which requires credentialed access. See [Obtaining MIMIC-IV Dataset](#-obtaining-mimic-iv-dataset) for detailed instructions.
 
 ---
 
