@@ -11,9 +11,10 @@
 **An AI-powered early warning system for sepsis prediction using MIMIC-IV ICU data**
 
 [Features](#-features) • [Installation](#-installation) • [Dataset](#-obtaining-mimic-iv-dataset) • [API Docs](#-api-endpoints) • [Deployment](#-deployment)
+</div>
+<div align="center">
 DEMO HF SPACE: https://huggingface.co/spaces/Expanic/SEPSIS_ICU_MIMIC
 </div>
-
 ---
 
 ## 📋 Overview
